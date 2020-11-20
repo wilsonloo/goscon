@@ -8,3 +8,7 @@ client
 goscon.*.log.*
 goscon.INFO
 vendor/*
+goscon.ERROR
+goscon.WARNING
+.idea/
+.gitignore~
