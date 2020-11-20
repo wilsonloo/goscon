@@ -284,6 +284,7 @@ func (c *Conn) clientReuseHandshake() error {
 }
 
 func (c *Conn) clientNewHandshake() error {
+
 	priKey := dh64.PrivateKey()
 	pubKey := dh64.PublicKey(priKey)
 

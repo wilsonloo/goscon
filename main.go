@@ -66,6 +66,7 @@ func main() {
 		os.Exit(1)
 	}
 
+	// 创建管理功能（网页）
 	if err := startManager(viper.GetString("manager")); err != nil {
 		glog.Errorf("start manager failed: err=%s", err.Error())
 		os.Exit(1)
@@ -73,6 +74,7 @@ func main() {
 
 	var wg sync.WaitGroup
 
+	// 根据当前配置启动指定程序
 	// listen
 	tcpListen := viper.GetString("tcp")
 	if tcpListen != "" {

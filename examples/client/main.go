@@ -33,6 +33,7 @@ func packetSize() int {
 func (cc *ClientCase) testEchoWrite(conn net.Conn, times int, ch chan<- []byte, done chan<- error) {
 	interval := time.Second / time.Duration(optPacketsPerSecond)
 	for i := 0; i < times; i++ {
+		// 塞入数据长度在[min,max] 的随机数据到远端
 		sz := packetSize()
 		buf := make([]byte, sz)
 		crand.Read(buf[:sz])
@@ -91,9 +92,12 @@ func (cc *ClientCase) testSCP(originConn *scp.Conn, conn net.Conn) (*scp.Conn, e
 func (cc *ClientCase) testN(conn *scp.Conn, packets int) error {
 	ch := make(chan []byte, packets)
 	done := make(chan error, 2)
+
+	// 启动异步写协程、读协程
 	go cc.testEchoWrite(conn, packets, ch, done)
 	go cc.testEchoRead(conn, ch, done)
 
+	// 需要等待上述两个协程完成
 	for i := 0; i < 2; i++ {
 		err := <-done
 		if err != nil {
