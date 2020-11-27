@@ -1,5 +1,5 @@
 manager: 0.0.0.0:6620
-tcp: 0.0.0.0:1248
+tcp: 10.0.136.12:1248
 kcp: 0.0.0.0:1248
 scp:
   handshake_timeout: 30

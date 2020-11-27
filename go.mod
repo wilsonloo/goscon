@@ -3,6 +3,7 @@ module github.com/ejoy/goscon
 go 1.13
 
 require (
+	github.com/go-redis/redis v6.15.9+incompatible // indirect
 	github.com/klauspost/cpuid v1.2.1 // indirect
 	github.com/klauspost/reedsolomon v1.9.3 // indirect
 	github.com/libp2p/go-reuseport v0.0.1
