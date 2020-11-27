@@ -61,6 +61,7 @@ func main() {
 		os.Exit(0)
 	}
 
+	// 加载配置，例如静态的local server本地服务列表
 	viper.SetConfigFile(*configFile)
 	if err := reloadConfig(); err != nil {
 		os.Exit(1)

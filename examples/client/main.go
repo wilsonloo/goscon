@@ -177,6 +177,7 @@ func startEchoServer(laddr string) (net.Listener, error) {
 }
 
 func testN() {
+	// 创建 optConcurrent 个协程进行并行测试
 	ch := make(chan error, optConcurrent)
 	for i := 0; i < optConcurrent; i++ {
 		go func() {

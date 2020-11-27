@@ -243,6 +243,7 @@ func upgradeConn(network string, localConn net.Conn, remoteConn *scp.Conn) (conn
 	return
 }
 
+// lws @param remoteConn Client
 // NewConn creates a new connection to target server, pair with remoteConn
 func (u *upstreams) NewConn(remoteConn *scp.Conn) (conn net.Conn, err error) {
 	tserver := remoteConn.TargetServer()
@@ -261,6 +262,8 @@ func (u *upstreams) NewConn(remoteConn *scp.Conn) (conn net.Conn, err error) {
 	}
 
 	option := u.option.Load().(*Option)
+	glog.Infof("Dial to local server <%s> ok, net is %s", host.Addr, option.Net)
+
 	conn, err = upgradeConn(option.Net, tcpConn, remoteConn)
 	if err != nil {
 		conn.Close()

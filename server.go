@@ -21,6 +21,9 @@ type connPair struct {
 	RemoteConn *SCPConn // client <-> scp server
 }
 
+// lws
+// @param id 会话对 ID
+// tag ： 方向
 func pump(id int, tag string, dst net.Conn, src net.Conn, ch chan<- int) error {
 	var err error
 	var written, packets int
@@ -166,6 +169,7 @@ func (ss *SCPServer) onReuseConn(scon *scp.Conn) bool {
 	return true
 }
 
+// lws @param scon Client
 func newUpstreamConn(scon *scp.Conn) (conn net.Conn, err error) {
 	localconn, err := upstream.NewConn(scon)
 	if err != nil {
@@ -182,6 +186,8 @@ func newUpstreamConn(scon *scp.Conn) (conn net.Conn, err error) {
 func (ss *SCPServer) onNewConn(scon *scp.Conn) bool {
 	id := scon.ID()
 	defer ss.ReleaseID(id)
+
+	glog.Info("Server.onNewConn")
 
 	connPair := &connPair{}
 	connPair.RemoteConn = NewSCPConn(scon)
