@@ -16,6 +16,7 @@ import (
 	"github.com/ejoy/goscon/scp"
 	"github.com/xjdrew/glog"
 	"github.com/xtaci/kcp-go"
+	"github.com/go-redis/redis"
 )
 
 type ClientCase struct {
@@ -204,6 +205,7 @@ var optVerbose bool
 var network string
 var optTargetServer string
 var fecData, fecParity int
+var optToReg bool
 
 func main() {
 	// set default log directory
@@ -224,6 +226,7 @@ func main() {
 	flag.BoolVar(&optEchoClient, "startEchoClient", false, "start echo client")
 	flag.BoolVar(&optVerbose, "verbose", false, "verbose")
 	flag.StringVar(&optTargetServer, "targetServer", "", "prefered targetserver")
+	flag.BoolVar(&optToReg, "reg", false, "service recognizer address")
 	kcp := flag.NewFlagSet("kcp", flag.ExitOnError)
 	kcp.IntVar(&fecData, "fec_data", 1, "FEC: number of shards to split the data into")
 	kcp.IntVar(&fecParity, "fec_parity", 0, "FEC: number of parity shards")
@@ -243,6 +246,15 @@ func main() {
 	}
 
 	if echoServer != "" {
+		// 是否上报服务发现服务器
+		if optToReg {
+			option := &redis.Options{
+				Addr: "127.0.0.1:6379",
+			}
+			redisCli := redis.NewClient(option)
+			redisCli.Publish("chn_srv", "update-server@"+echoServer)
+		}
+
 		ln, err := startEchoServer(echoServer)
 		if err != nil {
 			glog.Errorf("start echo server: %s", err.Error())

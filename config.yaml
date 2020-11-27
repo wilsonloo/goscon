@@ -37,3 +37,6 @@ hosts:
   - name: test2
     addr: 127.0.0.1:11249
     weight: 100
+services_recognize:
+  addr: 127.0.0.1:6379
+  channel: chn_srv

@@ -57,6 +57,10 @@ func init() {
 
 	viper.SetDefault("upstream_option.net", "tcp") // upstream net: tcp,  默认使用 tcp 连接后端服务器，可以指定使用 scp 协议保证连接自动重连。
 
+	// 服务发现
+	viper.SetDefault("services_recognize.addr", "127.0.0.1:6379")
+	viper.SetDefault("services_recognize.channel", "chn_srv")
+
 	configCache = make(map[string]interface{})
 }
 

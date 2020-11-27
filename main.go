@@ -8,12 +8,15 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"net"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/spf13/viper"
 	"github.com/xjdrew/glog"
+	"github.com/go-redis/redis"
 )
 
 // log rule:
@@ -93,6 +96,36 @@ func main() {
 			err := defaultServer.Serve(l)
 			glog.Errorf("tcp listen stop: addr=%s, err=%s", tcpListen, err.Error())
 		}(l)
+	}
+
+	// 服务发现
+	servicesRecogAddr := viper.GetString("services_recognize.addr")
+	servicesRecogChannel := viper.GetString("services_recognize.channel")
+	if servicesRecogAddr != "" && servicesRecogChannel != "" {
+		go func(){
+			option := &redis.Options{
+				Addr: servicesRecogAddr,
+			}
+			client := redis.NewClient(option)
+
+			pb := client.Subscribe(servicesRecogChannel)
+			glog.Infof("listening channel @%s:%s to notify server infos...", servicesRecogAddr, servicesRecogChannel)
+
+			const CMD_UPDATE_SERVER string = "update-server@"
+			for {
+				select {
+				case msg := <- pb.Channel():
+					if strings.IndexAny(msg.Payload,CMD_UPDATE_SERVER) == 0 {
+						serverAddr := strings.Replace(msg.Payload, CMD_UPDATE_SERVER, "", 1)
+						glog.Info("new server updated@", serverAddr)
+
+					}else{
+						log.Println("receive channel message:", msg.Payload)
+					}
+				default:
+				}
+			}
+		}()
 	}
 
 	kcpListen := viper.GetString("kcp")
