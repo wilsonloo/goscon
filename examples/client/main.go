@@ -16,7 +16,7 @@ import (
 	"github.com/ejoy/goscon/scp"
 	"github.com/xjdrew/glog"
 	"github.com/xtaci/kcp-go"
-	"github.com/go-redis/redis"
+	//"github.com/go-redis/redis"
 )
 
 type ClientCase struct {
@@ -247,13 +247,13 @@ func main() {
 
 	if echoServer != "" {
 		// 是否上报服务发现服务器
-		if optToReg {
-			option := &redis.Options{
-				Addr: "127.0.0.1:6379",
-			}
-			redisCli := redis.NewClient(option)
-			redisCli.Publish("chn_srv", "update-server@"+echoServer)
-		}
+		//if optToReg {
+		//	option := &redis.Options{
+		//		Addr: "127.0.0.1:6379",
+		//	}
+		//	redisCli := redis.NewClient(option)
+		//	redisCli.Publish("chn_srv", "update-server@"+echoServer)
+		//}
 
 		ln, err := startEchoServer(echoServer)
 		if err != nil {

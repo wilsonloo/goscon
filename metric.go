@@ -30,6 +30,11 @@ var (
 		Help: "number of handshake errors, partitioned by error code",
 	}, []string{"code"})
 
+	connectionAcceptsByBackendServer = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "goscon_connection_accepts_by_backend_server",
+		Help: "number of connected by backend server, partitioned by address",
+	}, []string{"code"})
+
 	connectionReuses = prometheus.NewCounter(prometheus.CounterOpts{
 		Name: "goscon_connection_reuses",
 		Help: "times of reuse successfully",
@@ -59,6 +64,7 @@ func init() {
 	prometheus.MustRegister(connectionAcceptFails)
 	prometheus.MustRegister(connectionCloses)
 	prometheus.MustRegister(handshakeErrors)
+	prometheus.MustRegister(connectionAcceptsByBackendServer)
 	prometheus.MustRegister(connectionReuses)
 	prometheus.MustRegister(connectionResend)
 	prometheus.MustRegister(connectionReuseFails)

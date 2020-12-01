@@ -8,6 +8,7 @@ import (
 	"github.com/ejoy/goscon/scp"
 	"github.com/ejoy/goscon/upstream"
 	"github.com/xjdrew/glog"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 var copyPool = sync.Pool{
@@ -72,6 +73,9 @@ func (p *connPair) Pump() {
 		p.RemoteConn.LocalAddr(), p.LocalConn.LocalAddr(), p.LocalConn.RemoteAddr())
 	downloadCh := make(chan int)
 	uploadCh := make(chan int)
+
+	localBackEndAddr := p.LocalConn.RemoteAddr().String()
+	connectionAcceptsByBackendServer.With(prometheus.Labels{"code": localBackEndAddr}).Inc()
 
 	go pump(p.RemoteConn.ID(), "c2s", p.LocalConn, p.RemoteConn, downloadCh)
 	go pump(p.RemoteConn.ID(), "s2c", p.RemoteConn, p.LocalConn, uploadCh)
