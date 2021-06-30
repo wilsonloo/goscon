@@ -292,6 +292,7 @@ func (c *Conn) clientNewHandshake() error {
 		id:           0,
 		key:          toLeu64(pubKey),
 		targetServer: c.config.TargetServer,
+		flag:         c.config.Flag,
 	}
 
 	if err := c.writeRecord(nq); err != nil {
@@ -407,6 +408,8 @@ func (c *Conn) serverNewHandshake(nq *newConnReq) error {
 
 	// set preferred target
 	c.config.TargetServer = nq.targetServer
+	// set config flag
+	c.config.Flag = nq.flag
 	return nil
 }
 
